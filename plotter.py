@@ -35,11 +35,15 @@ class Stat_plotter:
             paths.append(f'./{path}')
 
         def draw_heatmap(df):
+            """Function to draw heatmap of correlations between different columns"""
+
             heatmap = sns.heatmap(df.corr())
             heatmap.set(title="Heatmap of correlations")
             save_and_log('plots/heatmap.png', 'save heatmap plot')
 
         def draw_distribution_by_number_of_corners(df):
+            """Function to draw bar chart of rows number in relation of corners number"""
+
             corners_df = df[['name', 'gt_corners']].groupby(by='gt_corners').count()
             corners_plot = corners_df.plot(kind='bar', title='Rows distribution  by number of corners',
                                                    ylabel='number of rows', xlabel='number of corners')
@@ -50,6 +54,8 @@ class Stat_plotter:
 
         def draw_boxplot(df, name="Estimation of outliers without filtering",
                                             path='plots/Estimation_without_filtering.png'):
+            """Function to draw mean, max, min boxplot of deviation distribution"""
+
             limited_df = df[["mean","max","min"]]
             red_circle = dict(markerfacecolor='red', marker='o', markeredgecolor='white')
             fig, axs = plt.subplots(1, len(limited_df.columns), figsize=(20,10))
@@ -65,6 +71,8 @@ class Stat_plotter:
 
         def draw_comparison_stds(df, name='Comparison stds without filtering',
                                  path='plots/Comparison_stds_without_filtering.png'):
+            """Function to draw comparison bar chart with show stds for all columns"""  
+
             std_df = pd.DataFrame({
                 "all set": df[["mean", "max", "min"]].std().values.tolist(),
                 "floor": df[["floor_mean", "floor_max", "floor_min"]].std().values.tolist(),
@@ -76,6 +84,8 @@ class Stat_plotter:
             save_and_log(path, 'save bar stds')
             
         def filter_data(df):
+            """Function to filter data based on borders of boxplot"""
+
             filter_df = df
             for column in list(df)[3:]:
                 Q1 = df[column].quantile(0.25)
@@ -87,6 +97,8 @@ class Stat_plotter:
             return filter_df
 
         def draw_comparison(df, filter_df):
+            """Function to draw comparison bar chart of rows number  before and after filtering"""
+
             compare_df = pd.DataFrame({"amount of rows": (df.shape[0], filter_df.shape[0])},
                                         index=('row data', 'filtered data'))
             ax = compare_df.plot(kind='bar', title='Comparison after filtration', ylabel='number of rows')
@@ -95,6 +107,8 @@ class Stat_plotter:
             save_and_log('plots/Comparison.png', 'save bar comparison plot')
 
         def draw_mean_hist(filter_df):
+            """Function to draw histogram of mean deviation distribution"""
+
             sns.set_style('white')
             sns.set_context("paper", font_scale = 2)
             mean_hist = sns.displot(data=filter_df, x="mean", kind="hist", bins = 100, aspect = 1.5)
@@ -103,6 +117,8 @@ class Stat_plotter:
             save_and_log('plots/Mean_histogram.png', 'save mean histogram')
 
         def draw_suited_distribution(filter_df):
+            """Function to find suited distribution functions and draw it on plot"""
+
             mean_df = filter_df["mean"].values
             f = Fitter(mean_df, distributions=['invgamma', 'f', 'burr12', 'genhyperbolic'])
             f.fit()
@@ -111,6 +127,8 @@ class Stat_plotter:
             save_and_log('plots/Suited_distribution.png', 'save suited distribution for histogram')
 
         def draw_floor_ceiling_hist(filter_df):
+            """Function to draw comparison histogram of floor and ceiling mean deviations number"""
+
             plt.figure()
             filter_df[["floor_mean", "ceiling_mean"]].plot(kind='hist',
              title='Comparison floor and ceiling mean', alpha=0.8, bins=50)
@@ -119,6 +137,10 @@ class Stat_plotter:
                          'save comparison histogram')
 
         def draw_comparison_means_in_ranges(filter_df):
+            """Function to draw comparison bar chart of mean deviations number
+             in percentages  in limited ranges.
+            """
+
             deviation_df = pd.DataFrame({},
             index = ['0-1', '1-2', '2-3', '3-5', '5-10', '10-20','20-30'])
             df_mean_ranges = filter_df
