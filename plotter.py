@@ -11,7 +11,8 @@ logger.add('debug.log', format="{time} {level} {message}",
 
 class Stat_plotter:
     
-    def draw_plots(self, j_file):
+    @staticmethod
+    def draw_plots(j_file):
         
         def read_json(j_file):
             try:
@@ -92,7 +93,6 @@ class Stat_plotter:
                 Q3 = df[column].quantile(0.75)
                 IQR = Q3 - Q1
                 filter_df = filter_df[(filter_df[column] > (Q1-1.5*IQR)) & (filter_df[column] < (Q3+1.5*IQR))]
-            self.filter_df = filter_df
             logger.info('filter data')
             return filter_df
 
