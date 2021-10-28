@@ -50,3 +50,16 @@
 2021-10-28T14:34:34.348014+0300 INFO save suited distribution for histogram
 2021-10-28T14:34:34.971749+0300 INFO save comparison histogram
 2021-10-28T14:34:35.365247+0300 INFO save bar comparison mean plot
+2021-10-28T14:48:19.987900+0300 INFO read json file
+2021-10-28T14:48:20.548866+0300 INFO save heatmap plot
+2021-10-28T14:48:20.901347+0300 INFO save bar distribution by corners
+2021-10-28T14:48:23.688591+0300 INFO save boxplot
+2021-10-28T14:48:24.042613+0300 INFO save bar stds
+2021-10-28T14:48:24.057330+0300 INFO filter data
+2021-10-28T14:48:25.493725+0300 INFO save boxplot
+2021-10-28T14:48:25.939259+0300 INFO save bar stds
+2021-10-28T14:48:26.296024+0300 INFO save bar comparison plot
+2021-10-28T14:48:27.041870+0300 INFO save mean histogram
+2021-10-28T14:48:30.463055+0300 INFO save suited distribution for histogram
+2021-10-28T14:48:31.280127+0300 INFO save comparison histogram
+2021-10-28T14:48:31.764743+0300 INFO save bar comparison mean plot

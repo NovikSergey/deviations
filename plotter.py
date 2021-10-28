@@ -22,29 +22,23 @@ class Stat_plotter:
                 print("please give the path to json file")
                 return exit()
 
-
         plt.rcParams['axes.grid'] = True
         paths = []
-        
         
         def common_parameters():
             plt.xticks(rotation=0, horizontalalignment="center", fontsize=14)
             plt.yticks(fontsize=14)
-
-        
 
         def save_and_log(path, message):
             plt.savefig(path, dpi=300, bbox_inches='tight')
             logger.info(message)
             paths.append(f'./{path}')
 
-
         def draw_heatmap(df):
             heatmap = sns.heatmap(df.corr())
             heatmap.set(title="Heatmap of correlations")
             save_and_log('plots/heatmap.png', 'save heatmap plot')
 
-        
         def draw_distribution_by_number_of_corners(df):
             corners_df = df[['name', 'gt_corners']].groupby(by='gt_corners').count()
             corners_plot = corners_df.plot(kind='bar', title='Rows distribution  by number of corners',
@@ -54,7 +48,6 @@ class Stat_plotter:
             save_and_log('plots/Distribution_by_number_of_corners.png',
                         'save bar distribution by corners')
 
-        
         def draw_boxplot(df, name="Estimation of outliers without filtering",
                                             path='plots/Estimation_without_filtering.png'):
             limited_df = df[["mean","max","min"]]
@@ -69,7 +62,6 @@ class Stat_plotter:
                         ax.semilogy()
             plt.suptitle(name, fontsize=20, fontweight='bold')
             save_and_log(path, 'save boxplot')
-        
 
         def draw_comparison_stds(df, name='Comparison stds without filtering',
                                  path='plots/Comparison_stds_without_filtering.png'):
@@ -83,8 +75,6 @@ class Stat_plotter:
             common_parameters()
             save_and_log(path, 'save bar stds')
             
-        
-
         def filter_data(df):
             filter_df = df
             for column in list(df)[3:]:
@@ -95,7 +85,6 @@ class Stat_plotter:
             self.filter_df = filter_df
             logger.info('filter data')
             return filter_df
-        
 
         def draw_comparison(df, filter_df):
             compare_df = pd.DataFrame({"amount of rows": (df.shape[0], filter_df.shape[0])},
@@ -104,7 +93,6 @@ class Stat_plotter:
             ax.bar_label(ax.containers[0], label_type='center', fontsize=14)
             common_parameters()
             save_and_log('plots/Comparison.png', 'save bar comparison plot')
-        
 
         def draw_mean_hist(filter_df):
             sns.set_style('white')
@@ -114,7 +102,6 @@ class Stat_plotter:
             plt.show()
             save_and_log('plots/Mean_histogram.png', 'save mean histogram')
 
-
         def draw_suited_distribution(filter_df):
             mean_df = filter_df["mean"].values
             f = Fitter(mean_df, distributions=['invgamma', 'f', 'burr12', 'genhyperbolic'])
@@ -123,7 +110,6 @@ class Stat_plotter:
             plt.title("Suitable distributions")
             save_and_log('plots/Suited_distribution.png', 'save suited distribution for histogram')
 
-
         def draw_floor_ceiling_hist(filter_df):
             plt.figure()
             filter_df[["floor_mean", "ceiling_mean"]].plot(kind='hist',
@@ -131,7 +117,6 @@ class Stat_plotter:
             plt.xlabel('deviation in degrees')
             save_and_log('plots/Comparison_floor_ceiling_histogram.png',
                          'save comparison histogram')
-
 
         def draw_comparison_means_in_ranges(filter_df):
             deviation_df = pd.DataFrame({},
