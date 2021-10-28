@@ -2,17 +2,26 @@ import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
 from fitter import Fitter
+from loguru import logger
+
+logger.remove()
+logger.add('debug.log', format="{time} {level} {message}",
+            level="DEBUG", rotation='10KB')
 
 
 class Stat_plotter:
     
     def draw_plots(self, j_file):
-        try:
-            df = pd.read_json(j_file)
-        except ValueError:
-            print("please give the path to json file")
-            return
-        print('read json file')
+        
+        def read_json(j_file):
+            try:
+                df = pd.read_json(j_file)
+                logger.info("read json file")
+                return df
+            except ValueError:
+                print("please give the path to json file")
+                return exit()
+
 
         plt.rcParams['axes.grid'] = True
         paths = []
@@ -26,7 +35,7 @@ class Stat_plotter:
 
         def save_and_log(path, message):
             plt.savefig(path, dpi=300, bbox_inches='tight')
-            print(message)
+            logger.info(message)
             paths.append(f'./{path}')
 
 
@@ -84,7 +93,7 @@ class Stat_plotter:
                 IQR = Q3 - Q1
                 filter_df = filter_df[(filter_df[column] > (Q1-1.5*IQR)) & (filter_df[column] < (Q3+1.5*IQR))]
             self.filter_df = filter_df
-            print('filter data')
+            logger.info('filter data')
             return filter_df
         
 
@@ -141,7 +150,7 @@ class Stat_plotter:
             save_and_log('plots/Comparison_means_ranges.png',
                          'save bar comparison mean plot')
         
-
+        df = read_json(j_file)
         draw_heatmap(df)
         draw_distribution_by_number_of_corners(df)
         draw_boxplot(df)
